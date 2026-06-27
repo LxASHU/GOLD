@@ -32,6 +32,12 @@
                 
                 // GoldAPI natively uses the word 'price' for the market rate
                 const priceInINR = data.price; 
+                // 1. Define the live USD to INR exchange multiplier rate
+const USD_TO_INR = 94.36; 
+
+// 2. Perform the math operation to calculate the Rupee value
+const priceInINR = priceInUSD * USD_TO_INR;
+
 
                 // Formats the raw number into standard Indian Rupee presentation (e.g., ₹2,20,500)
                 const formattedPrice = priceInINR.toLocaleString('en-IN', {
