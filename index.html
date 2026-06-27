@@ -31,22 +31,22 @@
                 const data = await response.json();
                 
                 // GoldAPI natively uses the word 'price' for the market rate
-                const priceInINR = data.price; 
+                const priceInINR = data.price;
                 // 1. Define the live USD to INR exchange multiplier rate
 const USD_TO_INR = 94.36; 
 
 // 2. Perform the math operation to calculate the Rupee value
 const priceInINR = priceInUSD * USD_TO_INR;
 
+// 3. Convert the raw number into standard Indian thousands/lakhs currency format
+const formattedPrice = priceInINR.toLocaleString('en-IN', {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 2
+});
 
-                // Formats the raw number into standard Indian Rupee presentation (e.g., ₹2,20,500)
-                const formattedPrice = priceInINR.toLocaleString('en-IN', {
-                    maximumFractionDigits: 2,
-                    minimumFractionDigits: 2
-                });
+// 4. Update your screen text tag with the final formatted string
+document.getElementById("gold-value").textContent = "₹" + formattedPrice;
 
-                // Injects the final text string straight into your HTML span element
-                document.getElementById("gold-value").textContent = "₹" + formattedPrice;
                 
             } catch (error) {
                 console.error("Error fetching price:", error);
