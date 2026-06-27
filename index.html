@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Price Tracker (INR)</title>
+</head>
+<body>
+
+    <!-- This is the clean visual text containing your live price -->
+    <h1>Gold Price: <span id="gold-value">Loading...</span></h1>
+
+    <script>
+        // 1. This endpoint requests the gold price directly in Indian Rupees (INR)
+        const API_URL = "https://goldapi.io"; 
+
+        // 2. REPLACE THIS with your actual secret GoldAPI token key
+        const MY_GOLDAPI_KEY = "goldapi-a60160be3f505bbc51b6bdb2b19eb3e3-io"; 
+
+        async function fetchGoldPrice() {
+            try {
+                // GoldAPI requires the token key passed inside the headers block
+                const response = await fetch(API_URL, {
+                    method: 'GET',
+                    headers: {
+                        'x-access-token': MY_GOLDAPI_KEY,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) throw new Error('API Network Error');
+                const data = await response.json();
+                
+                // GoldAPI natively uses the word 'price' for the market rate
+                const priceInINR = data.price; 
+
+                // Formats the raw number into standard Indian Rupee presentation (e.g., ₹2,20,500)
+                const formattedPrice = priceInINR.toLocaleString('en-IN', {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2
+                });
+
+                // Injects the final text string straight into your HTML span element
+                document.getElementById("gold-value").textContent = "₹" + formattedPrice;
+                
+            } catch (error) {
+                console.error("Error fetching price:", error);
+                document.getElementById("gold-value").textContent = "Error loading price";
+            }
+        }
+
+        // Run immediately when your GitHub page loads
+        fetchGoldPrice();
+
+        // Automatically pull fresh data every 60 seconds
+        setInterval(fetchGoldPrice, 60000);
+    </script>
+
+</body>
+</html>
+
